@@ -61,6 +61,7 @@ resource "aws_iam_policy" "ecsTaskExecutionRole_ssm" {
   path        = "/"
   description = "allow ecs task execution role to read this app's parameters"
 
+# TODO resource
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -71,6 +72,22 @@ resource "aws_iam_policy" "ecsTaskExecutionRole_ssm" {
         "ssm:GetParameters"
       ],
       "Resource": "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.app}/${var.environment}/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": "${aws_kms_key.ssm.arn}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogStream",
+        "logs:CreateLogGroup"
+      ],
+      "Resource": "*"
     }
   ]
 }

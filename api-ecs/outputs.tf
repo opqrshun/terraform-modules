@@ -18,3 +18,17 @@ output "scale_up" {
 output "scale_out" {
   value = "fargate service scale -h"
 }
+
+# The AWS keys for the CICD user to use in a build system
+output "cicd_id" {
+  value = aws_iam_access_key.cicd_keys.id
+}
+
+output "cicd_secret" {
+  value = aws_iam_access_key.cicd_keys.encrypted_secret
+}
+
+# The URL for the docker image repo in ECR
+output "docker_registry" {
+  value = data.aws_ecr_repository.ecr.repository_url
+}

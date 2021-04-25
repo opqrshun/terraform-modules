@@ -40,7 +40,14 @@ variable "domain" {
 }
 
 
+variable "keybase_user" {
+}
 
+variable "api_audience" {
+  default = "example"
+}
+variable "api_issuer" {
+}
 
 
 ## ECS
@@ -49,11 +56,6 @@ variable "domain" {
 # Best practice is that this value is higher than 1024 so the container processes
 # isn't running at root.
 
-
-# The name of the container to run
-variable "container_name" {
-  default = "app"
-}
 
 variable "container_port" {
 }

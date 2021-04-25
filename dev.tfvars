@@ -18,6 +18,16 @@ zone = "sample.com"
 
 rds_password = "password"
 public_key   = "ssh-rsa AAA"
+
+keybase_user = "ttaki"
+
+api_audience = ""
+api_issuer = ""
+
+# Google OAuth
+google_client_id = "" 
+google_client_secret = ""
+
 tags = {
   application   = "sample"
   environment   = "dev"

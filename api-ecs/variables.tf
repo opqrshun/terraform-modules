@@ -36,6 +36,9 @@ variable "domain" {
 }
 
 
+variable "private" {
+  default = false
+}
 
 
 
@@ -46,10 +49,6 @@ variable "domain" {
 # isn't running at root.
 
 
-# The name of the container to run
-variable "container_name" {
-  default = "app"
-}
 
 variable "container_port" {
 }
@@ -88,6 +87,16 @@ variable "lb_protocol" {
   default = "TCP"
 }
 
+variable "keybase_user" {
+}
+
+variable "api_audience" {
+  default = "example"
+}
+
+variable "api_issuer" {
+}
+
 #variable "saml_role" {
 #}
 #
@@ -103,7 +112,9 @@ data "terraform_remote_state" "base" {
 
 locals {
   namespace        = "${var.app}-${var.environment}"
-  target_subnets   = data.terraform_remote_state.base.outputs.private_subnets
+  container_name        = "${var.app}-${var.environment}-app"
+  # target_subnets   = data.terraform_remote_state.base.outputs.private_subnets
+  target_subnets = "${var.private == true ? data.terraform_remote_state.base.outputs.private_subnets : data.terraform_remote_state.base.outputs.public_subnets }"
   vpc_id           = data.terraform_remote_state.base.outputs.vpc_id
   certificate_arn  = data.terraform_remote_state.base.outputs.certificate_arn
 }

@@ -112,3 +112,7 @@ resource "aws_eip" "eip" {
   tags = var.tags
 }
 
+
+output "eip" {
+  value = aws_eip.eip.public_ip
+}

@@ -1,6 +1,6 @@
 # creates an application role that the container/task runs as
 resource "aws_iam_role" "app_role" {
-  name               = "${var.app}-${var.environment}-ecs-role"
+  name               = "${var.app}-${var.environment}-ecs_task-role"
   assume_role_policy = data.aws_iam_policy_document.app_role_assume_role_policy.json
 }
 
@@ -20,6 +20,16 @@ data "aws_iam_policy_document" "app_policy" {
 
     resources = [
       aws_ecs_cluster.app.arn,
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:PutObject"
+    ]
+    resources = [
+      "arn:aws:s3:::${var.app}-${var.environment}-log-s3/*",
+      "arn:aws:s3:::${var.app}-${var.environment}-public-files-origin/*"
     ]
   }
 }

@@ -15,7 +15,7 @@
 
 
 resource "aws_ecs_cluster" "app" {
-  name = "${var.app}-${var.environment}"
+  name = "${var.app}-${var.environment}-cluster"
   tags = var.tags
 }
 
@@ -52,7 +52,7 @@ resource "aws_ecs_task_definition" "app" {
   container_definitions = <<DEFINITION
 [
   {
-    "name": "${var.container_name}",
+    "name": "${local.container_name}",
     "image": "${var.default_backend_image}",
     "essential": true,
     "portMappings": [
@@ -97,7 +97,7 @@ DEFINITION
 }
 
 resource "aws_ecs_service" "app" {
-  name            = "${var.app}-${var.environment}"
+  name            = "${var.app}-${var.environment}-service"
   cluster         = aws_ecs_cluster.app.id
   launch_type     = "FARGATE"
   task_definition = aws_ecs_task_definition.app.arn
@@ -106,11 +106,12 @@ resource "aws_ecs_service" "app" {
   network_configuration {
     security_groups = [aws_security_group.nsg_task.id]
     subnets  = local.target_subnets
+    assign_public_ip = "${var.private == true ? false : true }"
   }
 
   load_balancer {
     target_group_arn = aws_lb_target_group.main.id
-    container_name   = var.container_name
+    container_name   = local.container_name 
     container_port   = var.container_port
   }
 
@@ -130,7 +131,7 @@ resource "aws_ecs_service" "app" {
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
 resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name               = "${var.app}-${var.environment}-ecs"
+  name               = "${var.app}-${var.environment}-ecs_task_execution-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -143,6 +144,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
       identifiers = ["ecs-tasks.amazonaws.com"]
     }
   }
+
 }
 
 resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
@@ -161,3 +163,4 @@ resource "aws_cloudwatch_log_group" "logs" {
   retention_in_days = var.logs_retention_in_days
   tags              = var.tags
 }
+

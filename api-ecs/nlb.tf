@@ -14,7 +14,9 @@ resource "aws_lb" "main" {
   enable_cross_zone_load_balancing = "true"
 
   # launch lbs in private subnets
-  internal =  true
+  internal = true 
+
+  #internal = "${var.private == true ? true : false }"
   subnets  = local.target_subnets
   tags     = var.tags
 }

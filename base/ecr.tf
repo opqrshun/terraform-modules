@@ -13,7 +13,7 @@ variable "image_tag_mutability" {
 
 # create an ECR repo at the app/image level
 resource "aws_ecr_repository" "app" {
-  name                 = var.app
+  name                 = "${var.app}-${var.environment}-ecr"
   image_tag_mutability = var.image_tag_mutability
 }
 

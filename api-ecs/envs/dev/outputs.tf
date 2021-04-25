@@ -18,3 +18,28 @@ output "scale_up" {
 output "scale_out" {
   value = module.dev.scale_out
 }
+
+# The AWS keys for the CICD user to use in a build system
+output "cicd_id" {
+  value = module.dev.cicd_id
+}
+output "cicd_secret" {
+  value = module.dev.cicd_secret
+}
+
+# The URL for the docker image repo in ECR
+output "docker_registry" {
+  value = module.dev.docker_registry
+}
+
+output "ssm_add_secret" {
+  value = module.dev.ssm_add_secret
+}
+
+output "ssm_add_secret_ref" {
+  value = module.dev.ssm_add_secret_ref
+}
+
+output "ssm_key_id" {
+  value = module.dev.ssm_key_id
+}
