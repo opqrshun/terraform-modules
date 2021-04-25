@@ -1,6 +1,6 @@
 hidden.env
 .terraform
-*.tfstage
-*.tfstage.backup
+*.tfstate
+*.tfstate.backup
 *.lock.hcl
 *.zip
