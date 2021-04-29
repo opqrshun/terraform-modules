@@ -66,7 +66,8 @@ module "ec2" {
   instance_count = 1
 
   name          = "${var.app}-${var.environment}-ec2"
-  ami           = data.aws_ami.ubuntu.id
+  # ami           = data.aws_ami.ubuntu.id
+  ami           = "ami-04cc2b0ad9e30a9c8"
   instance_type = "t2.micro"
 
   subnet_id     = tolist(local.public_subnets)[0]

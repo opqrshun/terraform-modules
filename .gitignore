@@ -4,3 +4,5 @@ hidden.env
 *.tfstate.backup
 *.lock.hcl
 *.zip
+
+dev.tfvars
