@@ -1,34 +1,8 @@
-/**
- * Elastic Container Service (ecs)
- * This component is required to create the Fargate ECS service. It will create a Fargate cluster
- * based on the application name and enironment. It will create a "Task Definition", which is required
- * to run a Docker container, https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definitions.html.
- * Next it creates a ECS Service, https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html
- * It attaches the Load Balancer created in `lb.tf` to the service, and sets up the networking required.
- * It also creates a role with the correct permissions. And lastly, ensures that logs are captured in CloudWatch.
- *
- * When building for the first time, it will install a "default backend", which is a simple web service that just
- * responds with a HTTP 200 OK. It's important to uncomment the lines noted below after you have successfully
- * migrated the real application containers to the task definition.
- */
-
-
-
 resource "aws_ecs_cluster" "app" {
   name = "${var.app}-${var.environment}-cluster"
   tags = var.tags
 }
 
-# The default docker image to deploy with the infrastructure.
-# Note that you can use the fargate CLI for application concerns
-# like deploying actual application images and environment variables
-# on top of the infrastructure provisioned by this template
-# https://github.com/turnerlabs/fargate
-# note that the source for the turner default backend image is here:
-# https://github.com/turnerlabs/turner-defaultbackend
-variable "default_backend_image" {
-  default = "quay.io/turner/turner-defaultbackend:0.2.0"
-}
 
 resource "aws_appautoscaling_target" "app_scale_target" {
   service_namespace  = "ecs"
@@ -52,42 +26,60 @@ resource "aws_ecs_task_definition" "app" {
   container_definitions = <<DEFINITION
 [
   {
-    "name": "${local.container_name}",
-    "image": "${var.default_backend_image}",
     "essential": true,
-    "portMappings": [
-      {
-        "protocol": "tcp",
-        "containerPort": ${var.container_port},
-        "hostPort": ${var.container_port}
-      }
-    ],
-    "environment": [
-      {
-        "name": "PORT",
-        "value": "${var.container_port}"
-      },
-      {
-        "name": "ENABLE_LOGGING",
-        "value": "false"
-      },
-      {
-        "name": "PRODUCT",
-        "value": "${var.app}"
-      },
-      {
-        "name": "ENVIRONMENT",
-        "value": "${var.environment}"
-      }
-    ],
+    "image": "public.ecr.aws/aws-observability/aws-for-fluent-bit:2.14.0",
+    "name": "log_router",
+    "firelensConfiguration": {
+      "type": "fluentbit"
+    },
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
         "awslogs-group": "/fargate/service/${var.app}-${var.environment}",
         "awslogs-region": "us-east-1",
-        "awslogs-stream-prefix": "ecs"
+        "awslogs-stream-prefix": "firelens"
       }
-    }
+    },
+    "memoryReservation": 128
+  },
+  {
+    "name": "${var.app}-${var.environment}-app",
+    "image": "${var.container_image}",
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 8080,
+        "protocol": "tcp"
+      }
+    ],
+    "essential": true,
+    "environment" : [
+    ],
+    "secrets": [
+      { "name" : "MYSQL_USER", "valueFrom" : "${local.ssm-namespace}/mysql_user" },
+      { "name" : "MYSQL_DATABASE", "valueFrom" : "${local.ssm-namespace}/mysql_database" },
+      { "name" : "MYSQL_PASSWORD", "valueFrom" : "${local.ssm-namespace}/mysql_password" },
+      { "name" : "MYSQL_PROTOCOL", "valueFrom" : "${local.ssm-namespace}/mysql_protocol" },
+      { "name" : "GEOCODING_API_KEY", "valueFrom" : "${local.ssm-namespace}/geocoding_api_key" },
+      { "name" : "S3_BUCKET", "valueFrom" : "${local.ssm-namespace}/s3_bucket" },
+      { "name" : "S3_BUCKET_KEY", "valueFrom" : "${local.ssm-namespace}/s3_bucket_key" },
+      { "name" : "S3_UPLOAD_TIMEOUT", "valueFrom" : "${local.ssm-namespace}/s3_upload_timeout" },
+      { "name" : "CONTENT_IMAGE_BASE_URL", "valueFrom" : "${local.ssm-namespace}/content_image_base_url" },
+      { "name" : "ENV", "valueFrom" : "${local.ssm-namespace}/env" },
+      { "name" : "REGION", "valueFrom" : "${local.ssm-namespace}/region" }
+    ],
+    "logConfiguration": {
+       "logDriver":"awsfirelens",
+        "options": {
+          "Name": "s3",
+          "region": "us-east-1",
+          "bucket": "${var.app}-${var.environment}-log-s3",
+          "total_file_size": "1M",
+          "upload_timeout": "1m",
+          "use_put_object": "On"
+        }
+    },
+    "memoryReservation": 256
   }
 ]
 DEFINITION

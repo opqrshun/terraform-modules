@@ -75,7 +75,8 @@ module "db" {
   password = var.rds_password 
   port     = 3306
 
-  multi_az               = true
+  # not free
+  multi_az               = false 
 
   subnet_ids             = local.private_subnets
   vpc_security_group_ids = [module.security_group.this_security_group_id]

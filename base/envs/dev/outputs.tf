@@ -30,3 +30,7 @@ output "docker_registry" {
   value = module.env.docker_registry
 }
 
+output "zone_id" {
+  value = module.env.zone_id
+}
+

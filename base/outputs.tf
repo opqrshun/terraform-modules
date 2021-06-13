@@ -28,3 +28,8 @@ output "docker_registry" {
   value = aws_ecr_repository.app.repository_url
 }
 
+#
+output "zone_id" {
+  value = aws_route53_zone.main.zone_id
+}
+

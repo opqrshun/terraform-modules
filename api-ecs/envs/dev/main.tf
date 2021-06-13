@@ -20,6 +20,7 @@ module "dev" {
   environment = var.environment
   zone = var.zone
   domain = var.domain
+  container_image = var.container_image
   container_port = var.container_port
   replicas = var.replicas
   ecs_autoscale_min_instances = var.ecs_autoscale_min_instances

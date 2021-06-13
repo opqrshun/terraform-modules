@@ -2,7 +2,10 @@ hidden.env
 .terraform
 *.tfstate
 *.tfstate.backup
+*.backup
 *.lock.hcl
 *.zip
 
 dev.tfvars
+stg.tfvars
+prod.tfvars

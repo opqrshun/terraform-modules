@@ -52,6 +52,8 @@ variable "private" {
 
 variable "container_port" {
 }
+variable "container_image" {
+}
 
 # How many containers to run
 variable "replicas" {
@@ -112,6 +114,7 @@ data "terraform_remote_state" "base" {
 
 locals {
   namespace        = "${var.app}-${var.environment}"
+  ssm-namespace        = "/${var.app}/${var.environment}"
   container_name        = "${var.app}-${var.environment}-app"
   # target_subnets   = data.terraform_remote_state.base.outputs.private_subnets
   target_subnets = "${var.private == true ? data.terraform_remote_state.base.outputs.private_subnets : data.terraform_remote_state.base.outputs.public_subnets }"

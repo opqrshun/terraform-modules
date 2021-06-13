@@ -8,6 +8,7 @@ data "terraform_remote_state" "base" {
 
 locals {
   certificate_arn = data.terraform_remote_state.base.outputs.certificate_arn
+  zone_id = data.terraform_remote_state.base.outputs.zone_id
 }
 
 

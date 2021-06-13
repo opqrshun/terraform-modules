@@ -57,6 +57,9 @@ variable "api_issuer" {
 # isn't running at root.
 
 
+variable "container_image" {
+}
+
 variable "container_port" {
 }
 
