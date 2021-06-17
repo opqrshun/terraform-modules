@@ -108,7 +108,7 @@ variable "api_issuer" {
 data "terraform_remote_state" "base" {
   backend = "local"
   config = {
-    path = "../../../base/envs/dev/terraform.tfstate"
+    path = "../../../base/envs/${var.environment}/terraform.tfstate"
   }
 }
 

@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 
-module "dev" {
+module "api-ecs" {
   source = "../../"
 
   region = var.region

@@ -36,7 +36,7 @@ resource "aws_ecs_task_definition" "app" {
       "logDriver": "awslogs",
       "options": {
         "awslogs-group": "/fargate/service/${var.app}-${var.environment}",
-        "awslogs-region": "us-east-1",
+        "awslogs-region": "${var.region}",
         "awslogs-stream-prefix": "firelens"
       }
     },
@@ -72,7 +72,7 @@ resource "aws_ecs_task_definition" "app" {
        "logDriver":"awsfirelens",
         "options": {
           "Name": "s3",
-          "region": "us-east-1",
+          "region": "${var.region}",
           "bucket": "${var.app}-${var.environment}-log-s3",
           "total_file_size": "1M",
           "upload_timeout": "1m",

@@ -1,7 +1,7 @@
 data "terraform_remote_state" "base" {
   backend = "local"
   config = {
-    path = "../../../base/envs/dev/terraform.tfstate"
+    path = "../../../base/envs/${var.environment}/terraform.tfstate"
   }
 }
 
@@ -66,8 +66,8 @@ module "ec2" {
   instance_count = 1
 
   name          = "${var.app}-${var.environment}-ec2"
-  # ami           = data.aws_ami.ubuntu.id
-  ami           = "ami-04cc2b0ad9e30a9c8"
+  ami           = data.aws_ami.ubuntu.id
+  # ami           = "ami-04cc2b0ad9e30a9c8"
   instance_type = "t2.micro"
 
   subnet_id     = tolist(local.public_subnets)[0]

@@ -6,12 +6,12 @@
 # Default scale up at 7 am weekdays, this is UTC so it doesn't adjust to daylight savings
 # https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html
 variable "scale_up_cron" {
-  default = "cron(0 11 ? * MON-FRI *)"
+  default = "cron(0 21 * * ? *)"
 }
 
 # Default scale down at 7 pm every day
 variable "scale_down_cron" {
-  default = "cron(0 23 * * ? *)"
+  default = "cron(0 15 * * ? *)"
 }
 
 # The mimimum number of containers to scale down to.
@@ -30,14 +30,14 @@ variable "scale_down_max_capacity" {
 resource "aws_appautoscaling_scheduled_action" "app_autoscale_time_up" {
   name = "app-autoscale-time-up-${var.app}-${var.environment}"
 
-  service_namespace  = aws_appautoscaling_target.app_scale_target.service_namespace
-  resource_id        = aws_appautoscaling_target.app_scale_target.resource_id
-  scalable_dimension = aws_appautoscaling_target.app_scale_target.scalable_dimension
+  service_namespace  = module.dev.app_scale_target.service_namespace
+  resource_id        = module.dev.app_scale_target.resource_id
+  scalable_dimension = module.dev.app_scale_target.scalable_dimension
   schedule           = var.scale_up_cron
 
   scalable_target_action {
-    min_capacity = aws_appautoscaling_target.app_scale_target.min_capacity
-    max_capacity = aws_appautoscaling_target.app_scale_target.max_capacity
+    min_capacity = module.dev.app_scale_target.min_capacity
+    max_capacity = module.dev.app_scale_target.max_capacity
   }
 }
 
@@ -46,9 +46,9 @@ resource "aws_appautoscaling_scheduled_action" "app_autoscale_time_up" {
 resource "aws_appautoscaling_scheduled_action" "app_autoscale_time_down" {
   name = "app-autoscale-time-down-${var.app}-${var.environment}"
 
-  service_namespace  = aws_appautoscaling_target.app_scale_target.service_namespace
-  resource_id        = aws_appautoscaling_target.app_scale_target.resource_id
-  scalable_dimension = aws_appautoscaling_target.app_scale_target.scalable_dimension
+  service_namespace  = module.dev.app_scale_target.service_namespace
+  resource_id        = module.dev.app_scale_target.resource_id
+  scalable_dimension = module.dev.app_scale_target.scalable_dimension
   schedule           = var.scale_down_cron
 
   scalable_target_action {

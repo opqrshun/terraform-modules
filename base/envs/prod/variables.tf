@@ -1,3 +1,4 @@
+
 /*
  * variables.tf
  * Common variables to use in various Terraform files (*.tf)
@@ -7,7 +8,10 @@
 # Other possible values: `us-east-2`, `us-west-1`, or `us-west-2`.
 # Currently, Fargate is only available in `us-east-1`.
 variable "region" {
-  default = "us-east-1"
+}
+
+# The AWS profile to use, this would be the same value used in AWS_PROFILE.
+variable "aws_profile" {
 }
 
 # Name of the application. This value should usually match the application tag below.
@@ -21,9 +25,10 @@ variable "environment" {
 variable "domain" {
 }
 
+variable "zone" {
+}
+
 variable "availability_zones" {
-  type        = list(string)
-  default     = ["a","b","c"]
 }
 
 # A map of the tags to apply to various resources. The required tags are:

@@ -2,12 +2,11 @@
 data "terraform_remote_state" "base" {
   backend = "local"
   config = {
-    path = "../../../base/envs/dev/terraform.tfstate"
+    path = "../../../base/envs/${var.environment}/terraform.tfstate"
   }
 }
 
 locals {
-  certificate_arn = data.terraform_remote_state.base.outputs.certificate_arn
   zone_id = data.terraform_remote_state.base.outputs.zone_id
 }
 
@@ -21,7 +20,7 @@ module "cdn" {
   dns_alias_enabled = true
   parent_zone_name  = var.zone 
 
-  acm_certificate_arn = local.certificate_arn
+  acm_certificate_arn = var.cert_arn
 }
 
 

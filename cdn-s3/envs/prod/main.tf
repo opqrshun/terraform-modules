@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 
-module "dev" {
+module "cdn" {
   source = "../../"
 
   aws_profile = var.aws_profile
@@ -22,18 +22,9 @@ module "dev" {
   tags = var.tags
   zone = var.zone
   domain = var.domain
-  cert_arn = local.cert_arn
   
+  # us-ease-1 cert for cdn
+  cert_arn = aws_acm_certificate.virginia_certificate.arn
 }
 
 
-data "terraform_remote_state" "base" {
-  backend = "local"
-  config = {
-    path = "../../../base/envs/${var.environment}/terraform.tfstate"
-  }
-}
-
-locals {
-  cert_arn = data.terraform_remote_state.base.outputs.certificate_arn
-}
