@@ -5,7 +5,7 @@
 data "terraform_remote_state" "base" {
   backend = "local"
   config = {
-    path = "./../../../base/envs/dev/terraform.tfstate"
+    path = "./../../../base/envs/${var.environment}/terraform.tfstate"
   }
 }
 
@@ -79,7 +79,7 @@ module "db" {
   multi_az               = false 
 
   subnet_ids             = local.private_subnets
-  vpc_security_group_ids = [module.security_group.this_security_group_id]
+  vpc_security_group_ids = [module.security_group.security_group_id]
 
   maintenance_window              = "Mon:00:00-Mon:03:00"
   backup_window                   = "03:00-06:00"

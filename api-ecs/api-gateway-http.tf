@@ -126,7 +126,7 @@ module "api_gateway" {
   vpc_links = {
     my-vpc = {
       name               = "${var.app}-${var.environment}-vpc-link"
-      security_group_ids = [module.api_gateway_security_group.this_security_group_id]
+      security_group_ids = [module.api_gateway_security_group.security_group_id ]
       subnet_ids         = local.target_subnets
     }
   }
@@ -136,14 +136,14 @@ module "api_gateway" {
 }
 
 resource "aws_apigatewayv2_stage" "example" {
-  api_id = module.api_gateway.this_apigatewayv2_api_id
+  api_id = module.api_gateway.apigatewayv2_api_id
   name   = "v1"
   auto_deploy = true
   tags = var.tags
 }
 
 resource "aws_apigatewayv2_authorizer" "authorizer" {
-  api_id           = module.api_gateway.this_apigatewayv2_api_id
+  api_id           = module.api_gateway.apigatewayv2_api_id
   authorizer_type  = "JWT"
   identity_sources = ["$request.header.Authorization"]
   name             = "${var.app}-${var.environment}-authorizer"
@@ -163,8 +163,8 @@ resource "aws_route53_record" "api" {
   name    = "api.${var.domain}"
   type    = "A"
   alias {
-    name                   = module.api_gateway.this_apigatewayv2_domain_name_configuration[0].target_domain_name
-    zone_id                = module.api_gateway.this_apigatewayv2_domain_name_configuration[0].hosted_zone_id
+    name                   = module.api_gateway.apigatewayv2_domain_name_configuration[0].target_domain_name
+    zone_id                = module.api_gateway.apigatewayv2_domain_name_configuration[0].hosted_zone_id
     evaluate_target_health = false
   }
 }

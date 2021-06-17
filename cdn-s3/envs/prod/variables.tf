@@ -6,15 +6,10 @@
 # The AWS region to use for the dev environment's infrastructure
 # Currently, Fargate is only available in `us-east-1`.
 variable "region" {
-  default = "us-east-1"
 }
 
 # The AWS profile to use, this would be the same value used in AWS_PROFILE.
 variable "aws_profile" {
-}
-
-# The environment that is being built
-variable "app" {
 }
 
 # The environment that is being built
@@ -26,7 +21,28 @@ variable "tags" {
   type = map(string)
 }
 
-# The environment that is being built
-variable "ec2_public_key" {
+
+# DNS
+
+# The application's name
+variable "app" {
 }
+
+variable "zone" {
+  type        = string
+  description = "The Route53 zone in which to add the DNS entry"
+}
+
+variable "domain" {
+  type        = string
+  description = "The domain name for your API Gateway endpoint"
+}
+
+
+
+
+
+
+
+
 
