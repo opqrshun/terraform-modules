@@ -66,8 +66,14 @@ data "aws_iam_policy_document" "app_role_assume_role_policy-tile" {
   }
 }
 
+provider "aws" {
+  alias  = "virginia"
+  region = "us-east-1"
+  profile = var.aws_profile
+}
 
 resource "aws_acm_certificate" "tile_certificate" {
+  provider = aws.virginia
   domain_name       = "tile.${var.domain}"
   validation_method = "DNS"
   subject_alternative_names = ["*.tile.${var.domain}"]
@@ -78,6 +84,7 @@ resource "aws_acm_certificate" "tile_certificate" {
 }
 
 resource "aws_route53_record" "tile_record" {
+  provider = aws.virginia
   for_each = {
     for dvo in aws_acm_certificate.tile_certificate.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
@@ -95,6 +102,7 @@ resource "aws_route53_record" "tile_record" {
 }
 
 resource "aws_acm_certificate_validation" "tile_validation" {
+  provider = aws.virginia
   certificate_arn         = aws_acm_certificate.tile_certificate.arn
   validation_record_fqdns = [for record in aws_route53_record.tile_record : record.fqdn]
 }
