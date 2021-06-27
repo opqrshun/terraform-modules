@@ -24,59 +24,30 @@ module "cdn" {
 }
 
 
-resource "aws_iam_role" "app_role" {
-  name               = "${var.app}-${var.environment}-s3-role"
-  assume_role_policy = data.aws_iam_policy_document.app_role_assume_role_policy.json
-}
+resource "aws_s3_bucket" "bucket" {
+  bucket = "${var.app}-${var.environment}-deleted-files"
+  acl    = "private"
 
-# assigns the app policy
-resource "aws_iam_role_policy" "app_policy" {
-  name   = "${var.app}-${var.environment}-s3-policy"
-  role   = aws_iam_role.app_role.id
-  policy = data.aws_iam_policy_document.app_policy.json
-}
+  lifecycle_rule {
+    id      = "images"
+    enabled = true
 
-# TODO: fill out custom policy
-data "aws_iam_policy_document" "app_policy" {
-  statement {
-    actions = [
-      "s3:ListBucket"
-    ]
-    resources = [
-      "arn:aws:s3:::${var.app}-${var.environment}-public-files"
-    ]
-  }
+    prefix = "images/"
 
-  statement {
-    actions = [
-      "s3:*Object"
-    ]
-    resources = [
-      "arn:aws:s3:::${var.app}-${var.environment}-public-files/*"
-    ]
-  }
-}
-
-# allow role to be assumed by ecs and local saml users (for development)
-data "aws_iam_policy_document" "app_role_assume_role_policy" {
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
+    tags = {
+      status    = "deleted"
+      autoclean = "true"
     }
 
-  }
-
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
+    transition {
+      days          = 7
+      storage_class = "GLACIER"
     }
 
+    expiration {
+      days = 180
+    }
   }
-}
 
+  tags     = var.tags
+}

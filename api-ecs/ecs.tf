@@ -61,10 +61,13 @@ resource "aws_ecs_task_definition" "app" {
       { "name" : "MYSQL_PASSWORD", "valueFrom" : "${local.ssm-namespace}/mysql_password" },
       { "name" : "MYSQL_PROTOCOL", "valueFrom" : "${local.ssm-namespace}/mysql_protocol" },
       { "name" : "GEOCODING_API_KEY", "valueFrom" : "${local.ssm-namespace}/geocoding_api_key" },
+      { "name" : "SENTRY_DSN", "valueFrom" : "${local.ssm-namespace}/sentry_dsn" },
       { "name" : "S3_BUCKET", "valueFrom" : "${local.ssm-namespace}/s3_bucket" },
+      { "name" : "S3_DELETED_BUCKET", "valueFrom" : "${local.ssm-namespace}/s3_deleted_bucket" },
       { "name" : "S3_BUCKET_KEY", "valueFrom" : "${local.ssm-namespace}/s3_bucket_key" },
       { "name" : "S3_UPLOAD_TIMEOUT", "valueFrom" : "${local.ssm-namespace}/s3_upload_timeout" },
       { "name" : "CONTENT_IMAGE_BASE_URL", "valueFrom" : "${local.ssm-namespace}/content_image_base_url" },
+      { "name" : "DELIVERY_URL", "valueFrom" : "${local.ssm-namespace}/delivery_url" },
       { "name" : "ENV", "valueFrom" : "${local.ssm-namespace}/env" },
       { "name" : "REGION", "valueFrom" : "${local.ssm-namespace}/region" }
     ],

@@ -6,7 +6,6 @@
 # The AWS region to use for the dev environment's infrastructure
 # Currently, Fargate is only available in `us-east-1`.
 variable "region" {
-  default = "us-east-1"
 }
 
 # The environment that is being built

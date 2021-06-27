@@ -6,7 +6,7 @@
 # The AWS region to use for the dev environment's infrastructure
 # Currently, Fargate is only available in `us-east-1`.
 variable "region" {
-  default = "us-east-1"
+  default = "ap-northeast-1"
 }
 
 # The AWS profile to use, this would be the same value used in AWS_PROFILE.

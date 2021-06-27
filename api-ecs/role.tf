@@ -1,10 +1,13 @@
 # creates an application role that the container/task runs as
+# set assume_role_policy
+# app_role_assume_role_policy(aws_iam_policy_document)
 resource "aws_iam_role" "app_role" {
   name               = "${var.app}-${var.environment}-ecs_task-role"
   assume_role_policy = data.aws_iam_policy_document.app_role_assume_role_policy.json
 }
 
 # assigns the app policy
+# aws_iam_role and app_policy(aws_iam_policy_document)
 resource "aws_iam_role_policy" "app_policy" {
   name   = "${var.app}-${var.environment}-ecs-policy"
   role   = aws_iam_role.app_role.id
@@ -25,11 +28,22 @@ data "aws_iam_policy_document" "app_policy" {
 
   statement {
     actions = [
-      "s3:PutObject"
+      "s3:PutObject",
     ]
     resources = [
       "arn:aws:s3:::${var.app}-${var.environment}-log-s3/*",
-      "arn:aws:s3:::${var.app}-${var.environment}-public-files-origin/*"
+      "arn:aws:s3:::${var.app}-${var.environment}-deleted-files/*"
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObject"
+    ]
+    resources = [
+      "arn:aws:s3:::${var.app}-${var.environment}-public-files-origin/*",
     ]
   }
 }
