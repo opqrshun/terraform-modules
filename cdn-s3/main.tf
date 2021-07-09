@@ -21,6 +21,12 @@ module "cdn" {
   parent_zone_name  = var.zone 
 
   acm_certificate_arn = var.cert_arn
+
+  lambda_function_association = [{
+    event_type   = "viewer-response"   
+    include_body = false
+    lambda_arn   = aws_lambda_function.lambda-edge-main.qualified_arn
+  }]
 }
 
 
