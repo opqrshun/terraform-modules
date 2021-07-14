@@ -21,6 +21,13 @@ variable "app" {
 variable "environment" {
 }
 
+variable "domain" {
+}
+
+variable "zone" {
+}
+
+
 # Tags for the infrastructure
 variable "tags" {
   type = map(string)

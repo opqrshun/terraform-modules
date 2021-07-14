@@ -14,6 +14,12 @@ variable "app" {
 variable "environment" {
 }
 
+variable "domain" {
+}
+
+variable "zone" {
+}
+
 # The environment that is being built
 variable "public_key" {
 }

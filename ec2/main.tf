@@ -68,6 +68,8 @@ module "ec2" {
   name          = "${var.app}-${var.environment}-ec2"
   ami           = data.aws_ami.ubuntu.id
   # ami           = "ami-04cc2b0ad9e30a9c8"
+  # ami           = "ami-0339d948b9577fc0b"
+
   instance_type = "t2.micro"
 
   subnet_id     = tolist(local.public_subnets)[0]
@@ -116,4 +118,16 @@ resource "aws_eip" "eip" {
 
 output "eip" {
   value = aws_eip.eip.public_ip
+}
+
+data "aws_route53_zone" "main" {
+  name = var.zone
+}
+
+resource "aws_route53_record" "www" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = "pma.${var.domain}"
+  type    = "A"
+  ttl     = "300"
+  records = [aws_eip.eip.public_ip]
 }
