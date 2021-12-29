@@ -8,19 +8,13 @@ exports.handler = (event, context, callback) => {
   headers["cache-control"] = [
     {
       key: "Cache-Control",
-      value: "max-age=300"
+      value: "max-age=3600"
     },  
   ];
   headers["x-robots-tag"] = [
     {
       key: "X-Robots-Tag",
       value: "noindex"
-    },  
-  ];
-  headers["access-control-allow-origin"] = [
-    {
-      key: "Access-Control-Allow-Origin",
-      value: "*"
     },  
   ];
   

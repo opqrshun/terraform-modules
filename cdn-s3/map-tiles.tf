@@ -3,11 +3,19 @@ module "cdn-tile" {
   # Cloud Posse recommends pinning every module to a specific version
   # version     = "x.x.x"
   name             = "${var.app}-${var.environment}-tile"
-  aliases           = ["a.tile.${var.domain}","b.tile.${var.domain}","c.tile.${var.domain}"]
+  aliases           = ["tile.${var.domain}","a.tile.${var.domain}","b.tile.${var.domain}","c.tile.${var.domain}"]
   dns_alias_enabled = true
   parent_zone_name  = var.zone 
 
   acm_certificate_arn = aws_acm_certificate.tile_certificate.arn
+
+  allowed_methods = ["GET", "HEAD", "OPTIONS"]
+
+  lambda_function_association = [{
+    event_type   = "viewer-response"   
+    include_body = false
+    lambda_arn   = aws_lambda_function.lambda-edge-tile.qualified_arn
+  }]
 }
 
 resource "aws_iam_role" "app_role-tile" {
