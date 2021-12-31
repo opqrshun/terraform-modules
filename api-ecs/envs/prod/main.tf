@@ -32,6 +32,9 @@ module "api-ecs" {
   api_audience = var.api_audience
   api_issuer = var.api_issuer
 
+  # CloudMap用
+  service_instance_ip = var.service_instance_ip
+
   tags = var.tags
   
 }

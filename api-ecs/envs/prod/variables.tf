@@ -106,4 +106,7 @@ variable "lb_protocol" {
 
 
 
+# クラウドマップ用
+variable "service_instance_ip" {
+}
 

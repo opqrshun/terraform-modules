@@ -30,6 +30,22 @@ module "security_group" {
   tags = var.tags
 }
 
+module "security_group_private" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "~> 3.0"
+
+  name        = "${var.app}-${var.environment}-ec2-service-sg"
+  description = "Security group for EC2 instance , Cloudmap"
+  vpc_id      = local.vpc_id
+
+  ingress_cidr_blocks = ["10.0.0.0/16"]
+  ingress_rules       = ["http-8080-tcp"]
+  egress_rules        = ["all-all"]
+
+  tags = var.tags
+}
+
+
 resource "aws_key_pair" "pair" {
   key_name   = "${var.app}-${var.environment}-key"
   public_key = var.public_key
@@ -63,17 +79,19 @@ resource "aws_kms_key" "this" {
 module "ec2" {
   source  = "terraform-aws-modules/ec2-instance/aws"
 
-  instance_count = 1
-
   name          = "${var.app}-${var.environment}-ec2"
-  ami           = data.aws_ami.ubuntu.id
-  # ami           = "ami-04cc2b0ad9e30a9c8"
+
+  # amiの指定
+  # ami           = data.aws_ami.ubuntu.id
+  # dev
+  ami           = "ami-04cc2b0ad9e30a9c8"
+  # prod
   # ami           = "ami-0339d948b9577fc0b"
 
-  instance_type = "t2.micro"
+  instance_type = "t3a.micro"
 
   subnet_id     = tolist(local.public_subnets)[0]
-  vpc_security_group_ids      = [module.security_group.this_security_group_id]
+  vpc_security_group_ids      = [module.security_group.this_security_group_id, module.security_group_private.this_security_group_id]
 
   associate_public_ip_address = true
 
@@ -109,7 +127,7 @@ module "ec2" {
 resource "aws_eip" "eip" {
   vpc = true
 
-  instance                  = module.ec2.id[0]
+  instance                  = module.ec2.id
   depends_on                = [data.aws_internet_gateway.igw]
 
   tags = var.tags
