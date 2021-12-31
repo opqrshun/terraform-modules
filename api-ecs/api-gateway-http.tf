@@ -35,7 +35,8 @@ module "api_gateway" {
     "GET /v1/user" = {
       connection_type    = "VPC_LINK"
       vpc_link          = "my-vpc"
-      integration_uri    = aws_lb_listener.tcp.arn
+      # integration_uri    = aws_lb_listener.tcp.arn
+      integration_uri    = aws_service_discovery_service.main.arn 
       
       # vpc link HTTP_PROXY
       integration_type   = "HTTP_PROXY"
@@ -48,7 +49,8 @@ module "api_gateway" {
     "GET /v1/user/{proxy+}" = {
       connection_type    = "VPC_LINK"
       vpc_link          = "my-vpc"
-      integration_uri    = aws_lb_listener.tcp.arn
+      # integration_uri    = aws_lb_listener.tcp.arn
+      integration_uri    = aws_service_discovery_service.main.arn 
       
       # vpc link HTTP_PROXY
       integration_type   = "HTTP_PROXY"
@@ -61,7 +63,8 @@ module "api_gateway" {
     "GET /{proxy+}" = {
       connection_type    = "VPC_LINK"
       vpc_link          = "my-vpc"
-      integration_uri    = aws_lb_listener.tcp.arn
+      # integration_uri    = aws_lb_listener.tcp.arn
+      integration_uri    = aws_service_discovery_service.main.arn 
       
       # vpc link HTTP_PROXY
       integration_type   = "HTTP_PROXY"
@@ -72,7 +75,8 @@ module "api_gateway" {
     "PUT /{proxy+}" = {
       connection_type    = "VPC_LINK"
       vpc_link          = "my-vpc"
-      integration_uri    = aws_lb_listener.tcp.arn
+      # integration_uri    = aws_lb_listener.tcp.arn
+      integration_uri    = aws_service_discovery_service.main.arn 
       
       # vpc link HTTP_PROXY
       integration_type   = "HTTP_PROXY"
@@ -85,7 +89,8 @@ module "api_gateway" {
     "POST /{proxy+}" = {
       connection_type    = "VPC_LINK"
       vpc_link          = "my-vpc"
-      integration_uri    = aws_lb_listener.tcp.arn
+      # integration_uri    = aws_lb_listener.tcp.arn
+      integration_uri    = aws_service_discovery_service.main.arn 
       
       # vpc link HTTP_PROXY
       integration_type   = "HTTP_PROXY"
@@ -98,7 +103,8 @@ module "api_gateway" {
     "PATCH /{proxy+}" = {
       connection_type    = "VPC_LINK"
       vpc_link          = "my-vpc"
-      integration_uri    = aws_lb_listener.tcp.arn
+      # integration_uri    = aws_lb_listener.tcp.arn
+      integration_uri    = aws_service_discovery_service.main.arn 
       
       # vpc link HTTP_PROXY
       integration_type   = "HTTP_PROXY"
@@ -111,7 +117,8 @@ module "api_gateway" {
     "DELETE /{proxy+}" = {
       connection_type    = "VPC_LINK"
       vpc_link          = "my-vpc"
-      integration_uri    = aws_lb_listener.tcp.arn
+      # integration_uri    = aws_lb_listener.tcp.arn
+      integration_uri    = aws_service_discovery_service.main.arn 
       
       # vpc link HTTP_PROXY
       integration_type   = "HTTP_PROXY"

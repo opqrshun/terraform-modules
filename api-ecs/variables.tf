@@ -98,6 +98,10 @@ variable "api_audience" {
 variable "api_issuer" {
 }
 
+# クラウドマップ用
+variable "service_instance_ip" {
+}
+
 #variable "saml_role" {
 #}
 #

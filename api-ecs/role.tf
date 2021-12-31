@@ -58,9 +58,13 @@ data "aws_iam_policy_document" "app_role_assume_role_policy" {
 
     principals {
       type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
+      identifiers = ["ecs-tasks.amazonaws.com","ec2.amazonaws.com"]
     }
 
   }
 }
 
+resource "aws_iam_instance_profile" "instance_profile" {
+  name = "${var.app}-${var.environment}-ecs_task-role"
+  role = aws_iam_role.app_role.name
+}

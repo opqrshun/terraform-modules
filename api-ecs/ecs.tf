@@ -104,18 +104,20 @@ resource "aws_ecs_service" "app" {
     assign_public_ip = "${var.private == true ? false : true }"
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.main.id
-    container_name   = local.container_name 
-    container_port   = var.container_port
-  }
+ # load_balancer {
+ #   target_group_arn = aws_lb_target_group.main.id
+ #   container_name   = local.container_name 
+ #   container_port   = var.container_port
+ # }
 
   tags                    = var.tags
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
 
   # workaround for https://github.com/hashicorp/terraform/issues/12634
-  depends_on = [aws_lb_listener.tcp]
+
+  # lbを使わないため Comment out
+  # depends_on = [aws_lb_listener.tcp]
 
   # [after initial apply] don't override changes made to task_definition
   # from outside of terrraform (i.e.; fargate cli)
