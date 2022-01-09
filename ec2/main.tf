@@ -82,13 +82,13 @@ module "ec2" {
   name          = "${var.app}-${var.environment}-ec2"
 
   # amiの指定
-  # ami           = data.aws_ami.ubuntu.id
+  ami           = data.aws_ami.ubuntu.id
   # dev
-  ami           = "ami-04cc2b0ad9e30a9c8"
+  # ami           = "ami-04cc2b0ad9e30a9c8"
   # prod
   # ami           = "ami-0339d948b9577fc0b"
 
-  instance_type = "t3a.micro"
+  instance_type = "t3a.nano"
 
   subnet_id     = tolist(local.public_subnets)[0]
   vpc_security_group_ids      = [module.security_group.this_security_group_id, module.security_group_private.this_security_group_id]
@@ -104,20 +104,10 @@ module "ec2" {
   root_block_device = [
     {
       volume_type = "gp2"
-      volume_size = 10
+      volume_size = 12
       encrypted   = true
       kms_key_id  = aws_kms_key.this.arn
     },
-  ]
-
-  ebs_block_device = [
-    {
-      device_name = "/dev/sdf"
-      volume_type = "gp2"
-      volume_size = 5
-      encrypted   = true
-      kms_key_id  = aws_kms_key.this.arn
-    }
   ]
 
   tags = var.tags
