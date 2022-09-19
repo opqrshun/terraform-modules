@@ -10,8 +10,8 @@ data "aws_internet_gateway" "igw" {
 }
 
 locals {
-  vpc_id          = data.terraform_remote_state.base.outputs.vpc_id
-  vpc_cidr_block  = data.terraform_remote_state.base.outputs.vpc_cidr_block
+  vpc_id         = data.terraform_remote_state.base.outputs.vpc_id
+  vpc_cidr_block = data.terraform_remote_state.base.outputs.vpc_cidr_block
   public_subnets = data.terraform_remote_state.base.outputs.public_subnets
 }
 
@@ -24,7 +24,7 @@ module "security_group" {
   vpc_id      = local.vpc_id
 
   ingress_cidr_blocks = ["0.0.0.0/0"]
-  ingress_rules       = ["http-80-tcp", "https-443-tcp","ssh-tcp"]
+  ingress_rules       = ["http-80-tcp", "https-443-tcp", "ssh-tcp"]
   egress_rules        = ["all-all"]
 
   tags = var.tags
@@ -49,7 +49,7 @@ module "security_group_private" {
 resource "aws_key_pair" "pair" {
   key_name   = "${var.app}-${var.environment}-key"
   public_key = var.public_key
-  tags = var.tags
+  tags       = var.tags
 }
 
 data "aws_ami" "ubuntu" {
@@ -70,19 +70,19 @@ data "aws_ami" "ubuntu" {
 
 
 resource "aws_kms_key" "this" {
-  description       = "EC2 KMS key"
-  tags = var.tags
+  description = "EC2 KMS key"
+  tags        = var.tags
 }
 
 
 
 module "ec2" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
+  source = "terraform-aws-modules/ec2-instance/aws"
 
-  name          = "${var.app}-${var.environment}-ec2"
+  name = "${var.app}-${var.environment}-ec2"
 
   # amiの指定
-  ami           = data.aws_ami.ubuntu.id
+  ami = data.aws_ami.ubuntu.id
   # dev
   # ami           = "ami-04cc2b0ad9e30a9c8"
   # prod
@@ -90,8 +90,8 @@ module "ec2" {
 
   instance_type = "t3a.nano"
 
-  subnet_id     = tolist(local.public_subnets)[0]
-  vpc_security_group_ids      = [module.security_group.this_security_group_id, module.security_group_private.this_security_group_id]
+  subnet_id              = tolist(local.public_subnets)[0]
+  vpc_security_group_ids = [module.security_group.this_security_group_id, module.security_group_private.this_security_group_id]
 
   associate_public_ip_address = true
 
@@ -117,8 +117,8 @@ module "ec2" {
 resource "aws_eip" "eip" {
   vpc = true
 
-  instance                  = module.ec2.id
-  depends_on                = [data.aws_internet_gateway.igw]
+  instance   = module.ec2.id
+  depends_on = [data.aws_internet_gateway.igw]
 
   tags = var.tags
 }

@@ -14,14 +14,14 @@ provider "aws" {
 module "cognito" {
   source = "../../"
 
-  app = var.app
+  app         = var.app
   environment = var.environment
-  zone = var.zone
-  domain = var.domain
+  zone        = var.zone
+  domain      = var.domain
 
-  google_client_id = var.google_client_id
+  google_client_id     = var.google_client_id
   google_client_secret = var.google_client_secret
-  tags = var.tags
+  tags                 = var.tags
 }
 
 

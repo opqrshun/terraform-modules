@@ -44,16 +44,16 @@ module "security_group" {
 #}
 
 module "db" {
-  source  = "terraform-aws-modules/rds/aws"
+  source = "terraform-aws-modules/rds/aws"
 
   identifier = "${var.app}-${var.environment}-mariadb"
 
   # All available versions: http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_MySQL.html#MySQL.Concepts.VersionMgmt
-  engine               = "mariadb"
-  engine_version       = "10.5.8"
-  
+  engine         = "mariadb"
+  engine_version = "10.5.8"
+
   # 必須 Option group properties
-  major_engine_version     = "10.5"
+  major_engine_version = "10.5"
 
   # 必須 parameter group family
   family = "mariadb10.5"
@@ -61,10 +61,10 @@ module "db" {
   # create parameter group
   parameter_group_name = "${var.app}-${var.environment}-pg"
 
-  instance_class       = "db.t2.micro"
+  instance_class = "db.t2.micro"
 
   #  DB Instance class db.t2.micro does not support encryption
-  storage_encrypted     = false 
+  storage_encrypted = false
   # DB Storage GB
   allocated_storage = 20
 
@@ -72,11 +72,11 @@ module "db" {
   # only alphanumeric characters
   name     = "${var.app}${var.environment}"
   username = "${var.app}${var.environment}"
-  password = var.rds_password 
+  password = var.rds_password
   port     = 3306
 
   # not free
-  multi_az               = false 
+  multi_az = false
 
   subnet_ids             = local.private_subnets
   vpc_security_group_ids = [module.security_group.security_group_id]
@@ -93,9 +93,9 @@ module "db" {
   # performance_insights_enabled          = true
   # performance_insights_retention_period = 7
 
-  create_monitoring_role                = true
-  monitoring_interval                   = 60
-  monitoring_role_name = "${var.app}-${var.environment}-monitoring-rds-role"
+  create_monitoring_role = true
+  monitoring_interval    = 60
+  monitoring_role_name   = "${var.app}-${var.environment}-monitoring-rds-role"
 
   parameters = [
     {
@@ -108,8 +108,8 @@ module "db" {
     }
   ]
 
-  tags = var.tags
-  db_instance_tags = var.tags
+  tags                 = var.tags
+  db_instance_tags     = var.tags
   db_option_group_tags = var.tags
   db_subnet_group_tags = var.tags
 

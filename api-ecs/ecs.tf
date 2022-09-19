@@ -99,16 +99,16 @@ resource "aws_ecs_service" "app" {
   desired_count   = var.replicas
 
   network_configuration {
-    security_groups = [aws_security_group.nsg_task.id]
-    subnets  = local.target_subnets
-    assign_public_ip = "${var.private == true ? false : true }"
+    security_groups  = [aws_security_group.nsg_task.id]
+    subnets          = local.target_subnets
+    assign_public_ip = var.private == true ? false : true
   }
 
- # load_balancer {
- #   target_group_arn = aws_lb_target_group.main.id
- #   container_name   = local.container_name 
- #   container_port   = var.container_port
- # }
+  # load_balancer {
+  #   target_group_arn = aws_lb_target_group.main.id
+  #   container_name   = local.container_name 
+  #   container_port   = var.container_port
+  # }
 
   tags                    = var.tags
   enable_ecs_managed_tags = true

@@ -22,8 +22,8 @@ variable "domain" {
 }
 
 variable "availability_zones" {
-  type        = list(string)
-  default     = ["a","b","c"]
+  type    = list(string)
+  default = ["a", "b", "c"]
 }
 
 # A map of the tags to apply to various resources. The required tags are:

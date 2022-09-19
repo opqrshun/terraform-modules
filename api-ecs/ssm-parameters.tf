@@ -61,7 +61,7 @@ resource "aws_iam_policy" "ecsTaskExecutionRole_ssm" {
   path        = "/"
   description = "allow ecs task execution role to read this app's parameters"
 
-# TODO resource
+  # TODO resource
   policy = <<EOF
 {
   "Version": "2012-10-17",

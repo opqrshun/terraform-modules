@@ -7,20 +7,20 @@ data "terraform_remote_state" "base" {
 
 locals {
   certificate_arn = data.terraform_remote_state.base.outputs.certificate_arn
-  zone_id = data.terraform_remote_state.base.outputs.zone_id
+  zone_id         = data.terraform_remote_state.base.outputs.zone_id
 }
 
 
 provider "aws" {
-  alias  = "virginia"
-  region = "us-east-1"
+  alias   = "virginia"
+  region  = "us-east-1"
   profile = var.aws_profile
 }
 
 resource "aws_acm_certificate" "virginia_certificate" {
-  provider = aws.virginia
-  domain_name       = var.domain
-  validation_method = "DNS"
+  provider                  = aws.virginia
+  domain_name               = var.domain
+  validation_method         = "DNS"
   subject_alternative_names = ["*.${var.domain}"]
 
   lifecycle {
@@ -47,7 +47,7 @@ resource "aws_route53_record" "virginia_record" {
 }
 
 resource "aws_acm_certificate_validation" "virginia_validation" {
-  provider = aws.virginia
+  provider                = aws.virginia
   certificate_arn         = aws_acm_certificate.virginia_certificate.arn
   validation_record_fqdns = [for record in aws_route53_record.virginia_record : record.fqdn]
 }

@@ -15,12 +15,12 @@ provider "aws" {
 module "base" {
   source = "../../"
 
-  region = var.region
-  app = var.app
-  environment = var.environment
-  tags = var.tags
-  zone = var.zone
-  domain = var.domain
+  region             = var.region
+  app                = var.app
+  environment        = var.environment
+  tags               = var.tags
+  zone               = var.zone
+  domain             = var.domain
   availability_zones = var.availability_zones
 }
 

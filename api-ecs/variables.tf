@@ -116,12 +116,12 @@ data "terraform_remote_state" "base" {
 }
 
 locals {
-  namespace        = "${var.app}-${var.environment}"
-  ssm-namespace        = "/${var.app}/${var.environment}"
-  container_name        = "${var.app}-${var.environment}-app"
+  namespace      = "${var.app}-${var.environment}"
+  ssm-namespace  = "/${var.app}/${var.environment}"
+  container_name = "${var.app}-${var.environment}-app"
   # target_subnets   = data.terraform_remote_state.base.outputs.private_subnets
-  target_subnets = "${var.private == true ? data.terraform_remote_state.base.outputs.private_subnets : data.terraform_remote_state.base.outputs.public_subnets }"
-  vpc_id           = data.terraform_remote_state.base.outputs.vpc_id
-  certificate_arn  = data.terraform_remote_state.base.outputs.certificate_arn
+  target_subnets  = var.private == true ? data.terraform_remote_state.base.outputs.private_subnets : data.terraform_remote_state.base.outputs.public_subnets
+  vpc_id          = data.terraform_remote_state.base.outputs.vpc_id
+  certificate_arn = data.terraform_remote_state.base.outputs.certificate_arn
 }
 

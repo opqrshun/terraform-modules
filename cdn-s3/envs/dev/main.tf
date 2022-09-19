@@ -16,14 +16,14 @@ module "dev" {
   source = "../../"
 
   aws_profile = var.aws_profile
-  region = var.region
-  app = var.app
+  region      = var.region
+  app         = var.app
   environment = var.environment
-  tags = var.tags
-  zone = var.zone
-  domain = var.domain
-  cert_arn = local.cert_arn
-  
+  tags        = var.tags
+  zone        = var.zone
+  domain      = var.domain
+  cert_arn    = local.cert_arn
+
 }
 
 

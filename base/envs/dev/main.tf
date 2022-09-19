@@ -15,12 +15,12 @@ provider "aws" {
 module "env" {
   source = "../../"
 
-  region = var.region
-  app = var.app
+  region      = var.region
+  app         = var.app
   environment = var.environment
-  tags = var.tags
-  zone = var.zone
-  domain = var.domain
+  tags        = var.tags
+  zone        = var.zone
+  domain      = var.domain
 }
 
 

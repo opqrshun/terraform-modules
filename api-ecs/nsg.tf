@@ -1,7 +1,7 @@
 resource "aws_security_group" "nsg_task" {
   name        = "${var.app}-${var.environment}-task"
   description = "Limit connections from internal resources while allowing ${var.app}-${var.environment}-task to connect to all external resources"
-  vpc_id      = local.vpc_id 
+  vpc_id      = local.vpc_id
 
   tags = var.tags
 }

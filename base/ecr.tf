@@ -23,7 +23,7 @@ data "aws_caller_identity" "current" {
 # grant access to saml users
 resource "aws_ecr_repository_policy" "app" {
   repository = aws_ecr_repository.app.name
-  policy = <<EOF
+  policy     = <<EOF
 {
     "Version": "2008-10-17",
     "Statement": [

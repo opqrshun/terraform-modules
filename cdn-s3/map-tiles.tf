@@ -2,17 +2,17 @@ module "cdn-tile" {
   source = "cloudposse/cloudfront-s3-cdn/aws"
   # Cloud Posse recommends pinning every module to a specific version
   # version     = "x.x.x"
-  name             = "${var.app}-${var.environment}-tile"
-  aliases           = ["tile.${var.domain}","a.tile.${var.domain}","b.tile.${var.domain}","c.tile.${var.domain}"]
+  name              = "${var.app}-${var.environment}-tile"
+  aliases           = ["tile.${var.domain}", "a.tile.${var.domain}", "b.tile.${var.domain}", "c.tile.${var.domain}"]
   dns_alias_enabled = true
-  parent_zone_name  = var.zone 
+  parent_zone_name  = var.zone
 
   acm_certificate_arn = aws_acm_certificate.tile_certificate.arn
 
   allowed_methods = ["GET", "HEAD", "OPTIONS"]
 
   lambda_function_association = [{
-    event_type   = "viewer-response"   
+    event_type   = "viewer-response"
     include_body = false
     lambda_arn   = aws_lambda_function.lambda-edge-tile.qualified_arn
   }]
@@ -75,15 +75,15 @@ data "aws_iam_policy_document" "app_role_assume_role_policy-tile" {
 }
 
 provider "aws" {
-  alias  = "virginia"
-  region = "us-east-1"
+  alias   = "virginia"
+  region  = "us-east-1"
   profile = var.aws_profile
 }
 
 resource "aws_acm_certificate" "tile_certificate" {
-  provider = aws.virginia
-  domain_name       = "tile.${var.domain}"
-  validation_method = "DNS"
+  provider                  = aws.virginia
+  domain_name               = "tile.${var.domain}"
+  validation_method         = "DNS"
   subject_alternative_names = ["*.tile.${var.domain}"]
 
   lifecycle {
@@ -110,7 +110,7 @@ resource "aws_route53_record" "tile_record" {
 }
 
 resource "aws_acm_certificate_validation" "tile_validation" {
-  provider = aws.virginia
+  provider                = aws.virginia
   certificate_arn         = aws_acm_certificate.tile_certificate.arn
   validation_record_fqdns = [for record in aws_route53_record.tile_record : record.fqdn]
 }

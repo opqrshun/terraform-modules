@@ -15,26 +15,26 @@ module "cdn" {
   source = "cloudposse/cloudfront-s3-cdn/aws"
   # Cloud Posse recommends pinning every module to a specific version
   # version     = "x.x.x"
-  name             = "${var.app}-${var.environment}-public-files"
+  name              = "${var.app}-${var.environment}-public-files"
   aliases           = ["cdn.${var.domain}"]
   dns_alias_enabled = true
-  parent_zone_name  = var.zone 
+  parent_zone_name  = var.zone
 
   acm_certificate_arn = var.cert_arn
 
   lambda_function_association = [
     {
-      event_type   = "viewer-request"   
+      event_type   = "viewer-request"
       include_body = false
       lambda_arn   = aws_lambda_function.lambda-edge-viewer-request.qualified_arn
     },
     {
-      event_type   = "origin-response"   
+      event_type   = "origin-response"
       include_body = false
       lambda_arn   = aws_lambda_function.lambda-edge-origin-response.qualified_arn
     },
     {
-      event_type   = "viewer-response"   
+      event_type   = "viewer-response"
       include_body = false
       lambda_arn   = aws_lambda_function.lambda-edge-viewer-response.qualified_arn
     }
@@ -67,5 +67,5 @@ resource "aws_s3_bucket" "bucket" {
     }
   }
 
-  tags     = var.tags
+  tags = var.tags
 }

@@ -23,12 +23,12 @@ provider "aws" {
 module "rds" {
   source = "../../"
 
-  region = var.region
-  app = var.app
-  environment = var.environment
+  region       = var.region
+  app          = var.app
+  environment  = var.environment
   rds_password = var.rds_password
-  tags = var.tags
-  
+  tags         = var.tags
+
 }
 
 

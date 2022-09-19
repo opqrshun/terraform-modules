@@ -7,9 +7,9 @@ resource "aws_route53_record" "cognito" {
   name    = "auth.${var.domain}"
   type    = "A"
   alias {
-    name                   = module.aws_cognito_user_pool.domain_cloudfront_distribution_arn
+    name = module.aws_cognito_user_pool.domain_cloudfront_distribution_arn
     # This zone_id is fixed
-    zone_id = "Z2FDTNDATAQYW2"
+    zone_id                = "Z2FDTNDATAQYW2"
     evaluate_target_health = false
   }
 }
@@ -18,12 +18,12 @@ module "aws_cognito_user_pool" {
 
   source = "lgallard/cognito-user-pool/aws"
 
-  user_pool_name        = "${var.app}-${var.environment}-user-pool"
-  
+  user_pool_name = "${var.app}-${var.environment}-user-pool"
+
   #alias_attributes
   # username and alias
-  username_attributes        = ["email"]
-  auto_verified_attributes   = ["email"]
+  username_attributes      = ["email"]
+  auto_verified_attributes = ["email"]
 
   mfa_configuration = "OFF"
 
@@ -31,9 +31,9 @@ module "aws_cognito_user_pool" {
     minimum_length                   = 8
     require_lowercase                = true
     require_numbers                  = true
-    require_symbols                  = false 
+    require_symbols                  = false
     require_uppercase                = true
-    temporary_password_validity_days = 7 
+    temporary_password_validity_days = 7
 
   }
 
@@ -47,7 +47,7 @@ module "aws_cognito_user_pool" {
   domain = "auth.${var.domain}"
 
   admin_create_user_config = {
-    allow_admin_create_user_only=false
+    allow_admin_create_user_only = false
 
   }
 
@@ -55,7 +55,7 @@ module "aws_cognito_user_pool" {
     {
       attribute_data_type      = "String"
       developer_only_attribute = false
-      mutable                  = true 
+      mutable                  = true
       name                     = "email"
       required                 = true
 
@@ -72,29 +72,29 @@ module "aws_cognito_user_pool" {
       allowed_oauth_flows                  = ["code"]
       allowed_oauth_flows_user_pool_client = true
       allowed_oauth_scopes                 = ["email", "openid"]
-      callback_urls = var.environment == "prod" ? ["https://${var.domain}/"] : ["https://${var.domain}/","http://localhost:3000/"]
+      callback_urls                        = var.environment == "prod" ? ["https://${var.domain}/"] : ["https://${var.domain}/", "http://localhost:3000/"]
       default_redirect_uri                 = "https://${var.domain}/"
       #explicit_auth_flows                  = ["CUSTOM_AUTH_FLOW_ONLY", "ADMIN_NO_SRP_AUTH"]
-      generate_secret                      = false
-      logout_urls                          = var.environment == "prod" ? ["https://${var.domain}/"] : ["https://${var.domain}/","http://localhost:3000/"]
+      generate_secret = false
+      logout_urls     = var.environment == "prod" ? ["https://${var.domain}/"] : ["https://${var.domain}/", "http://localhost:3000/"]
 
-      name                                 = "${var.app}-${var.environment}-user-pool-client"
-      refresh_token_validity               = 30
-      supported_identity_providers         = ["Google","COGNITO"]
+      name                         = "${var.app}-${var.environment}-user-pool-client"
+      refresh_token_validity       = 30
+      supported_identity_providers = ["Google", "COGNITO"]
     },
     {
       allowed_oauth_flows                  = ["code"]
       allowed_oauth_flows_user_pool_client = true
       allowed_oauth_scopes                 = ["email", "openid"]
-      callback_urls = var.environment == "prod" ? ["https://${var.domain}/"] : ["https://${var.domain}/","http://localhost:3000/"]
+      callback_urls                        = var.environment == "prod" ? ["https://${var.domain}/"] : ["https://${var.domain}/", "http://localhost:3000/"]
       default_redirect_uri                 = "https://${var.domain}/"
       #explicit_auth_flows                  = ["CUSTOM_AUTH_FLOW_ONLY", "ADMIN_NO_SRP_AUTH"]
-      generate_secret                      = false
-      logout_urls                          = var.environment == "prod" ? ["https://${var.domain}/"] : ["https://${var.domain}/","http://localhost:3000/"]
+      generate_secret = false
+      logout_urls     = var.environment == "prod" ? ["https://${var.domain}/"] : ["https://${var.domain}/", "http://localhost:3000/"]
 
-      name                                 = "${var.app}-${var.environment}-user-pool-client"
-      read_attributes                      = ["email"]
-      refresh_token_validity               = 30
+      name                   = "${var.app}-${var.environment}-user-pool-client"
+      read_attributes        = ["email"]
+      refresh_token_validity = 30
     }
   ]
 
@@ -110,7 +110,7 @@ resource "aws_cognito_identity_provider" "social_provider" {
 
   provider_details = {
     authorize_scopes = "email"
-    client_id        = var.google_client_id 
+    client_id        = var.google_client_id
     client_secret    = var.google_client_secret
   }
 

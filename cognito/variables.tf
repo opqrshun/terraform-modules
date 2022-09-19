@@ -47,7 +47,7 @@ data "terraform_remote_state" "base" {
 }
 
 locals {
-  namespace        = "${var.app}-${var.environment}"
-  certificate_arn  = data.terraform_remote_state.base.outputs.certificate_arn
+  namespace       = "${var.app}-${var.environment}"
+  certificate_arn = data.terraform_remote_state.base.outputs.certificate_arn
 }
 
