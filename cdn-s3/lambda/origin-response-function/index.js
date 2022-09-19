@@ -41,7 +41,7 @@ exports.handler = (event, context, callback) => {
     // Ex: key=images/200x200/webp/image.jpg
     let prefix1,prefix2, originalKey, match, size, requiredFormat, imageName;
 
-
+    console.log("uri: %s",key)
     match = key.match(/(.*)\/(.*)\/(.*)\/(.*)\/(.*)/);
     if(!match) {
       callback(null, response);
@@ -54,7 +54,7 @@ exports.handler = (event, context, callback) => {
     size = match[3];
 
     // correction for jpg required for 'Sharp'
-    requiredFormat = match[4] == "jpg" ? "jpg" : match[4];
+    requiredFormat = match[4];
     imageName = match[5];
     originalKey = `${prefix1}/${prefix2}/${imageName}`;
 

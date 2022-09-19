@@ -135,7 +135,7 @@ resource "aws_lambda_function" "lambda-edge-viewer-response" {
   runtime     = "nodejs14.x"
   publish     = true
   memory_size = 128
-  timeout     = 3
+  timeout     = 10
 }
 
 resource "aws_lambda_function" "lambda-edge-origin-response" {

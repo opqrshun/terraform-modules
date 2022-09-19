@@ -19,17 +19,17 @@ exports.handler = (event, context, callback) => {
     let fwdUri = request.uri;
 
     // if there is no dimension attribute, just pass the request
-    if(!params.d){
+    if(!params.s){
+	    console.log("no param")
         callback(null, request);
-	console.log("no param")
         return;
     }
-    const size = params.d
+    const size = params.s
     // read the dimension parameter value = width x height and split it by 'x'
 
     if(!variables.allowedSize.includes(size)){
+	    console.log("invalid size :%s", size);
         callback(null, request);
-	console.log("invalid size :%s", size);
 	return 
     }
 
@@ -41,6 +41,7 @@ exports.handler = (event, context, callback) => {
     const match = fwdUri.match(/(.*)\/(.*)\/(.*)\.(.*)/);
     if(!match){
       console.log("not found");
+    callback(null, request);
     }
 
     let prefix1 = match[1];
