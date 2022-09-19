@@ -23,6 +23,10 @@ exports.handler = (event, context, callback) => {
 
   console.log("Response status code :%s", response.status);
   // TODO通常
+  if (response.status == 200) {
+    callback(null, response);
+    return 
+  }
 
   //check if image is not present
   if (response.status == 404) {
@@ -41,11 +45,12 @@ exports.handler = (event, context, callback) => {
     // Ex: key=images/200x200/webp/image.jpg
     let prefix1,prefix2, originalKey, match, size, requiredFormat, imageName;
 
-    console.log("uri: %s",key)
+    console.log("uri: %s",path)
     match = key.match(/(.*)\/(.*)\/(.*)\/(.*)\/(.*)/);
     if(!match) {
-      callback(null, response);
       console.log("not found");
+      callback(null, response);
+      return 
     }
 
     match = key.match(/(.*)\/(.*)\/(.*)\/(.*)\/(.*)/);
@@ -100,4 +105,6 @@ exports.handler = (event, context, callback) => {
       console.log("Exception while reading source image :%j",err);
     });
   } // end of if block checking response statusCode
+
+  console.log("other status, request",request)
 }
