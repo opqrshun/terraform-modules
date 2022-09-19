@@ -22,11 +22,23 @@ module "cdn" {
 
   acm_certificate_arn = var.cert_arn
 
-  lambda_function_association = [{
-    event_type   = "viewer-response"   
-    include_body = false
-    lambda_arn   = aws_lambda_function.lambda-edge-main.qualified_arn
-  }]
+  lambda_function_association = [
+    {
+      event_type   = "viewer-request"   
+      include_body = false
+      lambda_arn   = aws_lambda_function.lambda-edge-viewer-request.qualified_arn
+    },
+    {
+      event_type   = "origin-response"   
+      include_body = false
+      lambda_arn   = aws_lambda_function.lambda-edge-origin-response.qualified_arn
+    },
+    {
+      event_type   = "viewer-response"   
+      include_body = false
+      lambda_arn   = aws_lambda_function.lambda-edge-viewer-response.qualified_arn
+    }
+  ]
 }
 
 

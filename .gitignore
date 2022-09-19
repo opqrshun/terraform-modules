@@ -9,3 +9,5 @@ hidden.env
 dev.tfvars
 stg.tfvars
 prod.tfvars
+
+node_modules
