@@ -173,3 +173,21 @@ resource "aws_lambda_function" "lambda-edge-main" {
   memory_size = 128
   timeout     = 3
 }
+
+resource "aws_lambda_function" "lambda-edge-viewer-request-ogp" {
+  provider      = aws.virginia
+  filename      = "../../lambda/viewer-request-function-ogp.zip"
+  function_name = "${var.app}-${var.environment}-${var.lambda_function_name}-viewer-request-ogp"
+  role          = aws_iam_role.lambda-edge-iam.arn
+  handler       = "index.handler"
+
+  # The filebase64sha256() function is available in Terraform 0.11.12 and later
+  # For Terraform 0.11.11 and earlier, use the base64sha256() function and the file() function:
+  # source_code_hash = "${base64sha256(file("lambda_function_payload.zip"))}"
+  source_code_hash = filebase64sha256("../../lambda/viewer-request-function-ogp.zip")
+
+  runtime     = "nodejs14.x"
+  publish     = true
+  memory_size = 128
+  timeout     = 5
+}

@@ -7,8 +7,8 @@ const S3 = new AWS.S3({
 const Sharp = require('sharp');
 
 // set the S3 endpoints
-// const ENV = "dev"
-const ENV = 'prod';
+const ENV = "dev"
+// const ENV = 'prod';
 const APP = 'diglee';
 const BUCKET = `${APP}-${ENV}-public-files-origin`;
 
@@ -20,17 +20,18 @@ const variables = {
 // images/1m000000000000000000000000/small/jpg/01frd3ztvq26cycdjpynw5k1dw_01frd42ybpcrjzvxkb83g9422e.png
 exports.handler = (event, context, callback) => {
   let response = event.Records[0].cf.response;
+  let request = event.Records[0].cf.request;
 
-  console.log('Response status code :%s', response.status);
   // TODO通常
   if (response.status == 200) {
     callback(null, response);
     return;
   }
 
+  // console.log('Response status code :%s', response.status);
+
   //check if image is not present
   if (response.status == 404) {
-    let request = event.Records[0].cf.request;
 
     // read the required path. Ex: uri /images/100x100/webp/image.jpg
     let path = request.uri;
@@ -44,7 +45,7 @@ exports.handler = (event, context, callback) => {
     // Ex: key=images/200x200/webp/image.jpg
     let prefix1, prefix2, originalKey, match, size, requiredFormat, imageName;
 
-    console.log('uri: %s', path);
+    // console.log('uri: %s', path);
     match = key.match(/(.*)\/(.*)\/(.*)\/(.*)\/(.*)/);
     if (!match) {
       console.log('not found');
@@ -63,7 +64,7 @@ exports.handler = (event, context, callback) => {
     originalKey = `${prefix1}/${prefix2}/${imageName}`;
 
     if (!variables.allowedSize.includes(size)) {
-      callback(null, request);
+      callback(null, response);
       console.log('invalid size :%s', size);
       return;
     }
@@ -106,6 +107,7 @@ exports.handler = (event, context, callback) => {
       .catch((err) => {
         console.log('Exception while reading source image :%j', err);
       });
+      return
   } // end of if block checking response statusCode
 
   console.log('other status, request', request);

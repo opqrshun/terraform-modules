@@ -69,3 +69,58 @@ resource "aws_s3_bucket" "bucket" {
 
   tags = var.tags
 }
+
+
+resource "aws_cloudfront_distribution" "s3_distribution" {
+
+  enabled             = true
+  aliases           = ["ogp.${var.domain}"]
+
+  origin {
+    domain_name           = "origin.${var.domain}"
+    origin_id   = "${var.app}-${var.environment}-origin" 
+
+    custom_origin_config {
+      http_port                = 80
+      https_port               = 443
+      origin_protocol_policy   = "match-viewer"
+      origin_ssl_protocols     = ["TLSv1.2"]
+      origin_keepalive_timeout = 5
+      origin_read_timeout      = 30
+    }
+  }
+
+  default_cache_behavior {
+    # ... other configuration ...
+    target_origin_id = "${var.app}-${var.environment}-origin"
+    lambda_function_association {
+      event_type   = "viewer-request"
+      lambda_arn   = aws_lambda_function.lambda-edge-viewer-request-ogp.qualified_arn
+      include_body = false
+    }
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    viewer_protocol_policy = "allow-all"
+
+    # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudfront_distribution#forwarded-values-arguments
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
+
+  }
+   restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+  viewer_certificate {
+    cloudfront_default_certificate = true
+    acm_certificate_arn = var.cert_arn
+    ssl_support_method = "sni-only"
+  }
+
+  tags = var.tags
+}
