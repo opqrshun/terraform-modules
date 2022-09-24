@@ -7,8 +7,8 @@ const S3 = new AWS.S3({
 const Sharp = require('sharp');
 
 // set the S3 endpoints
-const ENV = "dev"
-// const ENV = 'prod';
+// const ENV = "dev"
+const ENV = 'prod';
 const APP = 'diglee';
 const BUCKET = `${APP}-${ENV}-public-files-origin`;
 
@@ -38,14 +38,12 @@ exports.handler = (event, context, callback) => {
 
     // read the S3 key from the path variable.
     // Ex: path variable /images/100x100/webp/image.jpg
-    // images/1m000000000000000000000000/small/jpg/01frd3ztvq26cycdjpynw5k1dw_01frd42ybpcrjzvxkb83g9422e.png
     let key = path.substring(1);
 
-    // parse the prefix, width, height and image name
-    // Ex: key=images/200x200/webp/image.jpg
-    let prefix1, prefix2, originalKey, match, size, requiredFormat, imageName;
+    let prefix1, userId, originalKey, match, size, requiredFormat, imageName;
 
     // console.log('uri: %s', path);
+    // /images/small/jpg/1m000000000000000000000000/01g2q8w7kad45a6s57np8nvn2z_01g2q8wa8epjp66sbgger22yc3.jpg
     match = key.match(/(.*)\/(.*)\/(.*)\/(.*)\/(.*)/);
     if (!match) {
       console.log('not found');
@@ -53,15 +51,14 @@ exports.handler = (event, context, callback) => {
       return;
     }
 
-    match = key.match(/(.*)\/(.*)\/(.*)\/(.*)\/(.*)/);
     prefix1 = match[1];
-    prefix2 = match[2];
-    size = match[3];
+    size = match[2];
 
     // correction for jpg required for 'Sharp'
-    requiredFormat = match[4];
+    requiredFormat = match[3] == "jpg" ? "jpeg" : match[3];
+    userId = match[4];
     imageName = match[5];
-    originalKey = `${prefix1}/${prefix2}/${imageName}`;
+    originalKey = `${prefix1}/${userId}/${imageName}`;
 
     if (!variables.allowedSize.includes(size)) {
       callback(null, response);

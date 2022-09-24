@@ -71,7 +71,7 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 
-resource "aws_cloudfront_distribution" "s3_distribution" {
+resource "aws_cloudfront_distribution" "ogp_distribution" {
 
   enabled             = true
   aliases           = ["ogp.${var.domain}"]

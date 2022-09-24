@@ -45,22 +45,22 @@ exports.handler = (event, context, callback) => {
   }
 
   let prefix1 = match[1];
-  let prefix2 = match[2];
+  let userId = match[2];
   let imageName = match[3];
   let extension = match[4];
 
   let url = [];
   // build the new uri to be forwarded upstream
   url.push(prefix1);
-  url.push(prefix2);
   url.push(size);
   url.push(extension);
+  url.push(userId);
 
   url.push(imageName + '.' + extension);
 
   fwdUri = url.join('/');
+  // /images/small/jpg/1m000000000000000000000000/01g2q8w7kad45a6s57np8nvn2z_01g2q8wa8epjp66sbgger22yc3.jpg
 
-  // final modified url is of format /images/200x200/webp/image.jpg
   request.uri = fwdUri;
   callback(null, request);
 };
