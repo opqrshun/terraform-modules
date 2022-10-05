@@ -43,12 +43,20 @@ exports.handler = async (event, context, callback) => {
       `${res.data.content_image_url}?s=small`,
       PUBLIC_URL + request.uri
     )
-    // TODO small
+
+    const headers = {"content-type" : [
+      {
+        key: "Content-Type",
+        value: "text/html"
+      },  
+    ]}
+
     const ogpResponse = {
       status: 200,
-      headers: [{ 'Content-Type': 'text/html' }],
+      headers: headers,
       body: replacedHTML,
     };
+
     console.log(ogpResponse, 'response');
     callback(null, ogpResponse);
     return;

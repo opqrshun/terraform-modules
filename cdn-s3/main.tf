@@ -22,6 +22,8 @@ module "cdn" {
 
   acm_certificate_arn = var.cert_arn
 
+  price_class = "PriceClass_200"
+
   lambda_function_association = [
     {
       event_type   = "viewer-request"
